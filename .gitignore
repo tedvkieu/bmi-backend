@@ -1,0 +1,70 @@
+# -----------------------
+# Maven
+# -----------------------
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+.log
+
+# -----------------------
+# Gradle
+# -----------------------
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# -----------------------
+# IDE files
+# -----------------------
+
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# -----------------------
+# OS files
+# -----------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------
+# Logs & temp files
+# -----------------------
+*.log
+logs/
+*.tmp
+*.bak
+*.swp
+
+# -----------------------
+# Spring Boot
+# -----------------------
+# ứng dụng khi chạy sinh ra
+*.pid
+*.seed
+*.key
+*.db
+
+# -----------------------
+# Env & config
+# -----------------------
+.env
+*.properties.local
+*.yml.local
+application-*.yml
+application-*.properties
+
+# Nếu bạn có file cấu hình nhạy cảm
+secret/
