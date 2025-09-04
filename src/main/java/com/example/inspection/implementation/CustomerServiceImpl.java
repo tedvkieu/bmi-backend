@@ -1,6 +1,9 @@
 package com.example.inspection.implementation;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.inspection.dto.request.CustomerRequest;
@@ -40,6 +43,15 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customerMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<CustomerResponse> getAllForPage(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Customer> customers = customerRepository.findAll(pageable);
+
+        // map entity -> dto bằng mapper
+        return customers.map(customerMapper::toResponse);
     }
 
     @Override

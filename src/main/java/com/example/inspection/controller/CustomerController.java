@@ -1,6 +1,8 @@
 package com.example.inspection.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,16 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getById(id));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<CustomerResponse>> getAll() {
         return ResponseEntity.ok(customerService.getAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CustomerResponse>> getAllForPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(customerService.getAllForPage(page, size));
     }
 
     @PutMapping("/{id}")

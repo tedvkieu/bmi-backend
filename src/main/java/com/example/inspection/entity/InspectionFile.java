@@ -59,7 +59,7 @@ public class InspectionFile {
 
     public enum ObjectType {
         SERVICE_MANAGER("Service Manager"),
-        GOVERNMENT_MANAGER("Government Manager");
+        GOVERNMENT_MANAGER("Importer");
 
         private final String description;
 
