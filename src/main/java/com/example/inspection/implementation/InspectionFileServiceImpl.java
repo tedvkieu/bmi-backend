@@ -58,7 +58,7 @@ public class InspectionFileServiceImpl implements InspectionFileService {
         entity.setServiceAddress(request.getServiceAddress());
         entity.setTaxCode(request.getTaxCode());
         entity.setEmail(request.getEmail());
-        entity.setObjectType(request.getObjectType());
+        // entity.setObjectType(request.getObjectType());
 
         return inspectionFileMapper.toDto(inspectionFileRepository.save(entity));
     }

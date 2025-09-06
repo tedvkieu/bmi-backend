@@ -21,6 +21,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 // 5. Receipt Entity
 @Entity
@@ -28,6 +29,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {
+        "customerSubmit",
+        "customerRelated",
+        "inspectionType",
+        "executionUnits",
+        "machines",
+        "inspectionResults"
+})
 public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,8 +73,8 @@ public class Receipt {
     @Column(name = "cout20")
     private Integer cout20;
 
-    @Column(name = "bulk_ship")
-    private Integer bulkShip;
+    @Column(name = "bulk_ship", nullable = false)
+    private Boolean bulkShip = false;
 
     @Column(name = "declaration_doc", length = 500)
     private String declarationDoc;

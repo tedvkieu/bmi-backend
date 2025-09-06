@@ -45,9 +45,9 @@ public class InspectionFile {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "object_type", nullable = false)
-    private ObjectType objectType;
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "object_type", nullable = false)
+    // private ObjectType objectType;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -57,18 +57,4 @@ public class InspectionFile {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public enum ObjectType {
-        SERVICE_MANAGER("Service Manager"),
-        GOVERNMENT_MANAGER("Importer");
-
-        private final String description;
-
-        ObjectType(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
 }

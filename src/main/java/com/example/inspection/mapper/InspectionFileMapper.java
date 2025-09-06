@@ -15,7 +15,7 @@ public class InspectionFileMapper {
         entity.setServiceAddress(request.getServiceAddress());
         entity.setTaxCode(request.getTaxCode());
         entity.setEmail(request.getEmail());
-        entity.setObjectType(request.getObjectType());
+        // entity.setObjectType(request.getObjectType());
         return entity;
     }
 
@@ -27,7 +27,7 @@ public class InspectionFileMapper {
                 .serviceAddress(entity.getServiceAddress())
                 .taxCode(entity.getTaxCode())
                 .email(entity.getEmail())
-                .objectType(entity.getObjectType().name())
+                // .objectType(entity.getObjectType().name())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

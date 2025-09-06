@@ -2,6 +2,7 @@ package com.example.inspection.dto.request;
 
 import lombok.Data;
 import java.time.LocalDate;
+
 import com.example.inspection.entity.Customer.CustomerType;
 
 @Data

@@ -16,7 +16,7 @@ public class ReceiptRequest {
     private String shipName;
     private Integer cout10;
     private Integer cout20;
-    private Integer bulkShip;
+    private Boolean bulkShip;
     private String declarationDoc;
     private String declarationPlace;
     private LocalDate inspectionDate;

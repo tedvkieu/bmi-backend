@@ -63,8 +63,8 @@ public class Customer {
     private List<InspectionFile> inspectionFiles;
 
     public enum CustomerType {
-        SUPPLIER("Nhà máy cung cấp"),
-        USER("Khách sử dụng máy móc");
+        IMPORTER("Người nhập khẩu"),
+        SERVICE_MANAGER("Quản lý dịch vụ");
 
         private final String description;
 
@@ -76,4 +76,5 @@ public class Customer {
             return description;
         }
     }
+
 }
