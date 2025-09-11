@@ -27,6 +27,9 @@ app:
   document:
     generation:
       strategy: docx-only # Options: docx-only, simple, improved, template-engine, auto
+  export:
+    dir: uploads/exports
+    url: /exports/**
 
   # Logging SQL (optional, để debug)
 logging:

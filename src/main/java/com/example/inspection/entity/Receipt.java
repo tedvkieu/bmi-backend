@@ -46,6 +46,9 @@ public class Receipt {
     @Column(name = "registration_no", length = 100)
     private String registrationNo;
 
+    @Column(name = "registration_date")
+    private LocalDate registrationDate; // Ngày đăng ký
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_submit_id", nullable = false)
     private Customer customerSubmit;
@@ -61,8 +64,14 @@ public class Receipt {
     @Column(name = "declaration_no", length = 100)
     private String declarationNo;
 
+    @Column(name = "declaration_date")
+    private LocalDate declarationDate; // Ngày khai
+
     @Column(name = "bill_of_lading", length = 100)
     private String billOfLading;
+
+    @Column(name = "bill_of_lading_date")
+    private LocalDate billOfLadingDate; // Ngày vận đơn
 
     @Column(name = "ship_name", length = 255)
     private String shipName;

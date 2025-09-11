@@ -37,6 +37,9 @@ public class Customer {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    @Column(name = "tax_code", length = 50)
+    private String taxCode;
+
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
 
@@ -59,8 +62,9 @@ public class Customer {
     @OneToMany(mappedBy = "customerRelated", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Receipt> relatedReceipts;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<InspectionFile> inspectionFiles;
+    // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch =
+    // FetchType.LAZY)
+    // private List<InspectionFile> inspectionFiles;
 
     public enum CustomerType {
         IMPORTER("Người nhập khẩu"),

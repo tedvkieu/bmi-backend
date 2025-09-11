@@ -2,10 +2,10 @@ package com.example.inspection.implementation;
 
 import lombok.RequiredArgsConstructor;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import com.example.inspection.dto.request.CustomerRequest;
 import com.example.inspection.dto.response.CustomerResponse;
 import com.example.inspection.entity.Customer;
@@ -13,6 +13,8 @@ import com.example.inspection.exception.ResourceNotFoundException;
 import com.example.inspection.mapper.CustomerMapper;
 import com.example.inspection.repository.CustomerRepository;
 import com.example.inspection.service.CustomerService;
+
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,5 +70,25 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ResourceNotFoundException("Customer not found with id " + id);
         }
         customerRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public Customer createCustomerFromSheet(Sheet sheet) {
+        String name = sheet.getRow(6).getCell(5).getStringCellValue(); // F7
+        String address = sheet.getRow(7).getCell(5).getStringCellValue(); // F8
+        String taxCode = sheet.getRow(8).getCell(5).getStringCellValue(); // F9
+        String phone = sheet.getRow(9).getCell(5).getStringCellValue(); // F10
+        String email = sheet.getRow(10).getCell(5).getStringCellValue(); // F11
+
+        Customer customer = new Customer();
+        customer.setName(name);
+        customer.setAddress(address);
+        customer.setTaxCode(taxCode);
+        customer.setPhone(phone);
+        customer.setEmail(email);
+        customer.setCustomerType(Customer.CustomerType.IMPORTER);
+
+        return customerRepository.save(customer);
     }
 }
