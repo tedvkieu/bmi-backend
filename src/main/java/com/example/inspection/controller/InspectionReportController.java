@@ -23,7 +23,6 @@ import java.util.concurrent.Callable;
 @RequestMapping("/api/inspection-reports")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class InspectionReportController {
 
     private final InspectionReportService inspectionReportService;
