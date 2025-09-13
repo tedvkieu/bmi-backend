@@ -43,11 +43,12 @@ public class MachineServiceImpl implements MachineService {
         Machine machine = machineMapper.toEntity(request, receipt);
         System.out.println("Creating Machine: " + machine);
         Machine machineSaved = machineRepository.save(machine);
-        try {
-            String reportFileName = documentGenerationService.generateInspectionReport(receipt.getReceiptId());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to generate inspection report", e);
-        }
+        // try {
+        // String reportFileName =
+        // documentGenerationService.generateInspectionReport(receipt.getReceiptId());
+        // } catch (Exception e) {
+        // throw new RuntimeException("Failed to generate inspection report", e);
+        // }
         return machineMapper.toResponse(machineSaved);
     }
 
