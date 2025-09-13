@@ -13,5 +13,6 @@ public class CustomerRequest {
     private LocalDate dob;
     private String phone;
     private String note;
+    private String taxCode;
     private CustomerType customerType;
 }

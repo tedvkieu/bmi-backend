@@ -16,6 +16,7 @@ public class CustomerMapper {
         customer.setEmail(request.getEmail());
         customer.setDob(request.getDob());
         customer.setPhone(request.getPhone());
+        customer.setTaxCode(request.getTaxCode());
         customer.setNote(request.getNote());
         customer.setCustomerType(request.getCustomerType());
         return customer;
@@ -29,6 +30,7 @@ public class CustomerMapper {
         customer.setPhone(request.getPhone());
         customer.setNote(request.getNote());
         customer.setCustomerType(request.getCustomerType());
+        customer.setTaxCode(request.getTaxCode());
     }
 
     public CustomerResponse toResponse(Customer customer) {
@@ -40,6 +42,7 @@ public class CustomerMapper {
         response.setDob(customer.getDob());
         response.setPhone(customer.getPhone());
         response.setNote(customer.getNote());
+        response.setTaxCode(customer.getTaxCode());
         response.setCustomerType(customer.getCustomerType());
         response.setCreatedAt(customer.getCreatedAt());
         response.setUpdatedAt(customer.getUpdatedAt());
