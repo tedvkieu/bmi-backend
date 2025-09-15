@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ExecutionUnitRequest {
     private Long receiptId;
-    private Long employeeId;
+    private Long userId;
     private String roleInCase;
 }

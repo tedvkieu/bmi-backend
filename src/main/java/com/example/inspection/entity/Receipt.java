@@ -126,9 +126,10 @@ public class Receipt {
     private List<InspectionResult> inspectionResults;
 
     public enum CertificateStatus {
-        PENDING("Đang xử lý"),
-        APPROVED("Đã duyệt"),
-        REJECTED("Từ chối");
+        OBTAINED("Đạt"),
+        NOT_OBTAINED("Không đạt"),
+        NOT_WITHIN_SCOPE("Không thuộc phạm vi"),
+        PENDING("Đang xử lý");
 
         private final String description;
 

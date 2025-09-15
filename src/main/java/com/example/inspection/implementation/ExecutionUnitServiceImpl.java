@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.inspection.dto.request.ExecutionUnitRequest;
 import com.example.inspection.dto.request.ExecutionUnitResponse;
-import com.example.inspection.entity.Employee;
+import com.example.inspection.entity.User;
 import com.example.inspection.entity.ExecutionUnit;
 import com.example.inspection.entity.Receipt;
 import com.example.inspection.exception.ResourceNotFoundException;
 import com.example.inspection.mapper.ExecutionUnitMapper;
-import com.example.inspection.repository.EmployeeRepository;
+import com.example.inspection.repository.UserRepository;
 import com.example.inspection.repository.ExecutionUnitRepository;
 import com.example.inspection.repository.ReceiptRepository;
 import com.example.inspection.service.ExecutionUnitService;
@@ -24,7 +24,7 @@ public class ExecutionUnitServiceImpl implements ExecutionUnitService {
 
     private final ExecutionUnitRepository executionUnitRepository;
     private final ReceiptRepository receiptRepository;
-    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
     private final ExecutionUnitMapper executionUnitMapper;
 
     @Override
@@ -32,11 +32,11 @@ public class ExecutionUnitServiceImpl implements ExecutionUnitService {
         Receipt receipt = receiptRepository.findById(request.getReceiptId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Receipt not found with id " + request.getReceiptId()));
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Employee not found with id " + request.getEmployeeId()));
+                        () -> new ResourceNotFoundException("User not found with id " + request.getUserId()));
 
-        ExecutionUnit executionUnit = executionUnitMapper.toEntity(request, receipt, employee);
+        ExecutionUnit executionUnit = executionUnitMapper.toEntity(request, receipt, user);
         return executionUnitMapper.toResponse(executionUnitRepository.save(executionUnit));
     }
 
@@ -63,11 +63,11 @@ public class ExecutionUnitServiceImpl implements ExecutionUnitService {
         Receipt receipt = receiptRepository.findById(request.getReceiptId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Receipt not found with id " + request.getReceiptId()));
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Employee not found with id " + request.getEmployeeId()));
+                        () -> new ResourceNotFoundException("User not found with id " + request.getUserId()));
 
-        executionUnitMapper.updateEntity(executionUnit, request, receipt, employee);
+        executionUnitMapper.updateEntity(executionUnit, request, receipt, user);
         return executionUnitMapper.toResponse(executionUnitRepository.save(executionUnit));
     }
 

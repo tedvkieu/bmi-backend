@@ -12,7 +12,7 @@ public class LoginResponse {
     private String type = "Bearer";
     private String username;
     private String email;
-    private String position;
+    private String role;
     private String fullName;
-    private Long employeeId;
+    private Long userId;
 }

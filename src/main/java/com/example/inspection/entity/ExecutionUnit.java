@@ -35,8 +35,8 @@ public class ExecutionUnit {
     private Receipt receipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "role_in_case", length = 100)
     private String roleInCase;
