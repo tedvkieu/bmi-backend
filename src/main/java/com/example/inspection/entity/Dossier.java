@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.context.annotation.DependsOn;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,9 +25,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-// 5. Receipt Entity
+// 5. Dossier Entity
 @Entity
-@Table(name = "receipts")
+@Table(name = "dossiers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,15 +35,15 @@ import lombok.ToString;
         "customerSubmit",
         "customerRelated",
         "inspectionType",
-        "executionUnits",
         "machines",
         "inspectionResults"
 })
-public class Receipt {
+@DependsOn({ "Customer", "InspectionType" })
+public class Dossier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "receipt_id")
-    private Long receiptId;
+    @Column(name = "dossier_id")
+    private Long dossierId;
 
     @Column(name = "registration_no", length = 100)
     private String registrationNo;
@@ -115,15 +117,15 @@ public class Receipt {
     @Column(name = "files", length = 1000)
     private String files;
 
-    // Relationships
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ExecutionUnit> executionUnits;
-
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Machine> machines;
 
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InspectionResult> inspectionResults;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_user_id")
+    private User createdByUser;
 
     public enum CertificateStatus {
         OBTAINED("Đạt"),

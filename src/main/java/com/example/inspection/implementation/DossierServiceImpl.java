@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import com.example.inspection.dto.request.ReceiptRequest;
 import com.example.inspection.dto.response.ReceiptResponse;
 import com.example.inspection.entity.Customer;
+import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.InspectionType;
-import com.example.inspection.entity.Receipt;
 import com.example.inspection.exception.ResourceNotFoundException;
-import com.example.inspection.mapper.ReceiptMapper;
+import com.example.inspection.mapper.DossierMapper;
 import com.example.inspection.repository.CustomerRepository;
+import com.example.inspection.repository.DossierRepository;
 import com.example.inspection.repository.InspectionTypeRepository;
-import com.example.inspection.repository.ReceiptRepository;
-import com.example.inspection.service.ReceiptService;
+import com.example.inspection.service.DossierService;
 
 import jakarta.transaction.Transactional;
 
@@ -29,18 +29,18 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ReceiptServiceImpl implements ReceiptService {
+public class DossierServiceImpl implements DossierService {
 
-        private final ReceiptRepository receiptRepository;
+        private final DossierRepository dossierRepository;
         private final CustomerRepository customerRepository;
         private final InspectionTypeRepository inspectionTypeRepository;
-        private final ReceiptMapper receiptMapper;
+        private final DossierMapper dossierMapper;
 
         private final DataFormatter formatter = new DataFormatter();
         private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         @Override
-        public ReceiptResponse createReceipt(ReceiptRequest request) {
+        public ReceiptResponse createDossier(ReceiptRequest request) {
                 Customer submit = customerRepository.findById(request.getCustomerSubmitId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Customer submit not found"));
                 Customer related = request.getCustomerRelatedId() != null
@@ -52,34 +52,34 @@ public class ReceiptServiceImpl implements ReceiptService {
                                 .findByInspectionTypeId(request.getInspectionTypeId())
                                 .orElseThrow(() -> new ResourceNotFoundException("InspectionType not found"));
 
-                Receipt receipt = receiptMapper.toEntity(request, submit, related, inspectionType);
-                return receiptMapper.toResponse(receiptRepository.save(receipt));
+                Dossier dossier = dossierMapper.toEntity(request, submit, related, inspectionType);
+                return dossierMapper.toResponse(dossierRepository.save(dossier));
         }
 
         @Override
-        public ReceiptResponse getReceiptById(Long id) {
-                Receipt receipt = receiptRepository.findById(id)
-                                .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));
-                return receiptMapper.toResponse(receipt);
+        public ReceiptResponse getDossierById(Long id) {
+                Dossier dossier = dossierRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Dossier not found"));
+                return dossierMapper.toResponse(dossier);
         }
 
         @Override
         public Page<ReceiptResponse> getAll(int page, int size) {
                 Pageable pageable = PageRequest.of(page, size);
-                return receiptRepository.findAll(pageable).map(receiptMapper::toResponse);
+                return dossierRepository.findAll(pageable).map(dossierMapper::toResponse);
         }
 
         @Override
-        public List<ReceiptResponse> getAllReceipts() {
-                return receiptRepository.findAll()
+        public List<ReceiptResponse> getAllDossiers() {
+                return dossierRepository.findAll()
                                 .stream()
-                                .map(receiptMapper::toResponse)
+                                .map(dossierMapper::toResponse)
                                 .collect(Collectors.toList());
         }
 
         @Override
-        public ReceiptResponse updateReceipt(Long id, ReceiptRequest request) {
-                Receipt receipt = receiptRepository.findById(id)
+        public ReceiptResponse updateDossier(Long id, ReceiptRequest request) {
+                Dossier dossier = dossierRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));
 
                 Customer submit = customerRepository.findById(request.getCustomerSubmitId())
@@ -93,21 +93,21 @@ public class ReceiptServiceImpl implements ReceiptService {
                                 .findByInspectionTypeId(request.getInspectionTypeId())
                                 .orElseThrow(() -> new ResourceNotFoundException("InspectionType not found"));
 
-                Receipt updated = receiptMapper.toEntity(request, submit, related, inspectionType);
-                updated.setReceiptId(receipt.getReceiptId());
-                return receiptMapper.toResponse(receiptRepository.save(updated));
+                Dossier updated = dossierMapper.toEntity(request, submit, related, inspectionType);
+                updated.setDossierId(dossier.getDossierId());
+                return dossierMapper.toResponse(dossierRepository.save(updated));
         }
 
         @Override
-        public void deleteReceipt(Long id) {
-                Receipt receipt = receiptRepository.findById(id)
-                                .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));
-                receiptRepository.delete(receipt);
+        public void deleteDossier(Long id) {
+                Dossier dossier = dossierRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Dossier not found"));
+                dossierRepository.delete(dossier);
         }
 
         @Override
         @Transactional
-        public Receipt createReceiptFromSheet(Sheet sheet, Customer customer) {
+        public Dossier createDossierFromSheet(Sheet sheet, Customer customer) {
                 String inspectionTypeCode = sheet.getRow(11).getCell(5).getStringCellValue(); // F12
                 InspectionType inspectionType = inspectionTypeRepository.findByInspectionTypeId("01")
                                 .orElseThrow(() -> new RuntimeException(
@@ -125,18 +125,18 @@ public class ReceiptServiceImpl implements ReceiptService {
                 String regDateStr = formatter.formatCellValue(sheet.getRow(16).getCell(12)).trim(); // M17
                 LocalDate registrationDate = regDateStr.isEmpty() ? null : LocalDate.parse(regDateStr, dtf);
 
-                Receipt receipt = new Receipt();
-                receipt.setInspectionType(inspectionType);
-                receipt.setCustomerSubmit(customer);
-                receipt.setCustomerRelated(customer);
+                Dossier dossier = new Dossier();
+                dossier.setInspectionType(inspectionType);
+                dossier.setCustomerSubmit(customer);
+                dossier.setCustomerRelated(customer);
 
-                receipt.setBillOfLading(billOfLading);
-                receipt.setBillOfLadingDate(billOfLadingDate);
-                receipt.setDeclarationNo(declarationNo);
-                receipt.setDeclarationDate(declarationDate);
-                receipt.setRegistrationNo(registrationNo);
-                receipt.setRegistrationDate(registrationDate);
+                dossier.setBillOfLading(billOfLading);
+                dossier.setBillOfLadingDate(billOfLadingDate);
+                dossier.setDeclarationNo(declarationNo);
+                dossier.setDeclarationDate(declarationDate);
+                dossier.setRegistrationNo(registrationNo);
+                dossier.setRegistrationDate(registrationDate);
 
-                return receiptRepository.save(receipt);
+                return dossierRepository.save(dossier);
         }
 }

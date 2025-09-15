@@ -3,7 +3,7 @@ package com.example.inspection.dto.request;
 import lombok.Data;
 import java.time.LocalDate;
 
-import com.example.inspection.entity.Receipt.CertificateStatus;
+import com.example.inspection.entity.Dossier.CertificateStatus;
 
 @Data
 public class ReceiptRequest {

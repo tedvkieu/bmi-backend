@@ -5,37 +5,37 @@ import org.springframework.stereotype.Component;
 import com.example.inspection.dto.request.ReceiptRequest;
 import com.example.inspection.dto.response.ReceiptResponse;
 import com.example.inspection.entity.Customer;
+import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.InspectionType;
-import com.example.inspection.entity.Receipt;
 
 @Component
-public class ReceiptMapper {
+public class DossierMapper {
 
-    public Receipt toEntity(ReceiptRequest request, Customer customerSubmit, Customer customerRelated,
+    public Dossier toEntity(ReceiptRequest request, Customer customerSubmit, Customer customerRelated,
             InspectionType inspectionType) {
-        Receipt receipt = new Receipt();
-        receipt.setRegistrationNo(request.getRegistrationNo());
-        receipt.setCustomerSubmit(customerSubmit);
-        receipt.setCustomerRelated(customerRelated);
-        receipt.setInspectionType(inspectionType);
-        receipt.setDeclarationNo(request.getDeclarationNo());
-        receipt.setBillOfLading(request.getBillOfLading());
-        receipt.setShipName(request.getShipName());
-        receipt.setCout10(request.getCout10());
-        receipt.setCout20(request.getCout20());
-        receipt.setBulkShip(request.getBulkShip());
-        receipt.setDeclarationDoc(request.getDeclarationDoc());
-        receipt.setDeclarationPlace(request.getDeclarationPlace());
-        receipt.setInspectionDate(request.getInspectionDate());
-        receipt.setCertificateDate(request.getCertificateDate());
-        receipt.setInspectionLocation(request.getInspectionLocation());
-        receipt.setCertificateStatus(request.getCertificateStatus());
-        return receipt;
+        Dossier dossier = new Dossier();
+        dossier.setRegistrationNo(request.getRegistrationNo());
+        dossier.setCustomerSubmit(customerSubmit);
+        dossier.setCustomerRelated(customerRelated);
+        dossier.setInspectionType(inspectionType);
+        dossier.setDeclarationNo(request.getDeclarationNo());
+        dossier.setBillOfLading(request.getBillOfLading());
+        dossier.setShipName(request.getShipName());
+        dossier.setCout10(request.getCout10());
+        dossier.setCout20(request.getCout20());
+        dossier.setBulkShip(request.getBulkShip());
+        dossier.setDeclarationDoc(request.getDeclarationDoc());
+        dossier.setDeclarationPlace(request.getDeclarationPlace());
+        dossier.setInspectionDate(request.getInspectionDate());
+        dossier.setCertificateDate(request.getCertificateDate());
+        dossier.setInspectionLocation(request.getInspectionLocation());
+        dossier.setCertificateStatus(request.getCertificateStatus());
+        return dossier;
     }
 
-    public ReceiptResponse toResponse(Receipt entity) {
+    public ReceiptResponse toResponse(Dossier entity) {
         ReceiptResponse res = new ReceiptResponse();
-        res.setReceiptId(entity.getReceiptId());
+        res.setReceiptId(entity.getDossierId());
         res.setRegistrationNo(entity.getRegistrationNo());
         res.setCustomerSubmitId(entity.getCustomerSubmit().getCustomerId());
         res.setCustomerRelatedId(

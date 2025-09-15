@@ -44,5 +44,5 @@ public class InspectionType {
 
     // Relationships
     @OneToMany(mappedBy = "inspectionType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Receipt> receipts;
+    private List<Dossier> dossiers;
 }

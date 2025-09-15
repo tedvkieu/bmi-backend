@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 @Data
 public class MachineResponse {
     private Long machineId;
-    private Long receiptId;
+    private Long dossierId;
     private String registrationNo;
     private String itemName;
     private String brand;

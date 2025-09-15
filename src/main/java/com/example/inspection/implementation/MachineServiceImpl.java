@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.inspection.dto.request.MachineRequest;
 import com.example.inspection.dto.response.MachineResponse;
+import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.Machine;
-import com.example.inspection.entity.Receipt;
 import com.example.inspection.exception.ResourceNotFoundException;
 import com.example.inspection.mapper.MachineMapper;
+import com.example.inspection.repository.DossierRepository;
 import com.example.inspection.repository.MachineRepository;
-import com.example.inspection.repository.ReceiptRepository;
 import com.example.inspection.service.DocumentGenerationService;
 import com.example.inspection.service.MachineService;
 
@@ -28,24 +28,24 @@ import java.util.stream.Collectors;
 public class MachineServiceImpl implements MachineService {
 
     private final MachineRepository machineRepository;
-    private final ReceiptRepository receiptRepository;
+    private final DossierRepository dossierRepository;
     private final MachineMapper machineMapper;
     private final DocumentGenerationService documentGenerationService;
 
     @Override
     public MachineResponse create(MachineRequest request) {
         System.out.println("Creating Machine with request: " + request);
-        Receipt receipt = receiptRepository.findById(request.getReceiptId())
+        Dossier dossier = dossierRepository.findById(request.getDossierId())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Receipt not found with id: " + request.getReceiptId()));
+                        () -> new ResourceNotFoundException("Dossier not found with id: " + request.getDossierId()));
 
-        System.out.println("Found Receipt: " + receipt);
-        Machine machine = machineMapper.toEntity(request, receipt);
+        System.out.println("Found Dossier: " + dossier);
+        Machine machine = machineMapper.toEntity(request, dossier);
         System.out.println("Creating Machine: " + machine);
         Machine machineSaved = machineRepository.save(machine);
         // try {
         // String reportFileName =
-        // documentGenerationService.generateInspectionReport(receipt.getReceiptId());
+        // documentGenerationService.generateInspectionReport(dossier.getDossierId());
         // } catch (Exception e) {
         // throw new RuntimeException("Failed to generate inspection report", e);
         // }
@@ -72,11 +72,11 @@ public class MachineServiceImpl implements MachineService {
         Machine machine = machineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Machine not found with id: " + id));
 
-        Receipt receipt = receiptRepository.findById(request.getReceiptId())
+        Dossier dossier = dossierRepository.findById(request.getDossierId())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Receipt not found with id: " + request.getReceiptId()));
+                        () -> new ResourceNotFoundException("Dossier not found with id: " + request.getDossierId()));
 
-        machineMapper.updateEntity(machine, request, receipt);
+        machineMapper.updateEntity(machine, request, dossier);
         return machineMapper.toResponse(machineRepository.save(machine));
     }
 
@@ -90,9 +90,9 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     @Transactional
-    public void importMachinesFromSheet(Sheet sheet, Long receiptId) {
-        Receipt receipt = receiptRepository.findById(receiptId)
-                .orElseThrow(() -> new IllegalArgumentException("Receipt not found with id: " + receiptId));
+    public void importMachinesFromSheet(Sheet sheet, Long dossierId) {
+        Dossier dossier = dossierRepository.findById(dossierId)
+                .orElseThrow(() -> new IllegalArgumentException("Dossier not found with id: " + dossierId));
 
         DataFormatter formatter = new DataFormatter();
 
@@ -106,7 +106,7 @@ public class MachineServiceImpl implements MachineService {
                 break;
 
             Machine machine = new Machine();
-            machine.setReceipt(receipt);
+            machine.setDossier(dossier);
             machine.setItemName(itemName);
             machine.setBrand(formatter.formatCellValue(row.getCell(2)).trim()); // C
             machine.setModel(formatter.formatCellValue(row.getCell(3)).trim()); // D
