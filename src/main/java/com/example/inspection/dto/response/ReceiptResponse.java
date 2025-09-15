@@ -24,6 +24,7 @@ public class ReceiptResponse {
     private LocalDate inspectionDate;
     private LocalDate certificateDate;
     private String inspectionLocation;
+    private String files;
     private CertificateStatus certificateStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
