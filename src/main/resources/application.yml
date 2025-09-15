@@ -29,7 +29,7 @@ app:
       strategy: docx-only # Options: docx-only, simple, improved, template-engine, auto
   export:
     dir: uploads/exports
-    url: /exports/**
+    url: /api/exports/**
 
   # Logging SQL (optional, để debug)
 logging:
@@ -44,7 +44,7 @@ jwt:
 
 # CORS Configuration
 cors:
-  allowed-origins: 
+  allowed-origins:
     - http://localhost:3000
     - http://127.0.0.1:3000
   allowed-methods:
@@ -56,8 +56,8 @@ cors:
   allowed-headers: "*"
   allow-credentials: true
 
-custom: 
-  data: 
+custom:
+  data:
     employee:
       fullName: Admin
       username: admin

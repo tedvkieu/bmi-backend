@@ -48,7 +48,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/employees/**").permitAll() // Tạm thời permit all cho testing
+                        .requestMatchers("/api/**").permitAll() // Tạm thời permit all cho testing
+
                         .anyRequest().authenticated());
 
         return http.build();

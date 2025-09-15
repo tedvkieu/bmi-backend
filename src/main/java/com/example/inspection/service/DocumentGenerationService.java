@@ -1,7 +1,9 @@
 package com.example.inspection.service;
 
 import com.example.inspection.entity.Receipt;
+import com.example.inspection.mapper.ReceiptMapper;
 import com.example.inspection.entity.Machine;
+import com.example.inspection.dto.response.ReceiptResponse;
 import com.example.inspection.entity.Customer;
 import com.example.inspection.repository.ReceiptRepository;
 import org.apache.poi.xwpf.usermodel.*;
@@ -21,10 +23,13 @@ public class DocumentGenerationService {
     @Autowired
     private ReceiptRepository receiptRepository;
 
+    @Autowired
+    private ReceiptMapper receiptMapper;
+
     private static final String TEMPLATE_PATH = "templates/inspection_report_template.docx";
     private static final String EXPORT_DIRECTORY = "uploads/exports/";
 
-    public String generateInspectionReport(Long receiptId) throws Exception {
+    public ReceiptResponse generateInspectionReport(Long receiptId) throws Exception {
         // Get receipt data with all related entities
         Receipt receipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new RuntimeException("Receipt not found with id: " +
@@ -91,21 +96,33 @@ public class DocumentGenerationService {
             Files.createDirectories(exportDir);
         }
 
-        // Save the generated document
-        String fileName = "inspection_report_" + receiptId + "_" +
+        // ✅ Đặt tên file: có billOfLading
+        String billOfLading = receipt.getBillOfLading() != null ? receipt.getBillOfLading() : "no-bol";
+        billOfLading = billOfLading.replaceAll("[^a-zA-Z0-9_-]", "_"); // tránh ký tự lạ
+
+        String fileName = "inspection_report_" + billOfLading + "_" + receiptId + "_" +
                 System.currentTimeMillis() + ".docx";
         String filePath = EXPORT_DIRECTORY + fileName;
 
-        FileOutputStream out = new FileOutputStream(filePath);
-        document.write(out);
-        out.close();
+        try (FileOutputStream out = new FileOutputStream(filePath)) {
+            document.write(out);
+        }
         document.close();
 
-        return fileName;
+        // ✅ Lưu đường dẫn vào entity
+        receipt.setFiles(fileName);
+        System.out.println("Generated document path: " + fileName);
+        receiptRepository.save(receipt);
+
+        return receiptMapper.toResponse(receipt);
     }
 
     private void replaceTextInDocument(XWPFDocument document, String placeholder,
             String replacement) {
+
+        if (replacement == null) {
+            replacement = "";
+        }
         // Replace in paragraphs
         for (XWPFParagraph paragraph : document.getParagraphs()) {
             replaceTextInParagraph(paragraph, placeholder, replacement);

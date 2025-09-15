@@ -53,6 +53,7 @@ public class ReceiptMapper {
         res.setCertificateDate(entity.getCertificateDate());
         res.setInspectionLocation(entity.getInspectionLocation());
         res.setCertificateStatus(entity.getCertificateStatus());
+        res.setFiles(entity.getFiles());
         res.setCreatedAt(entity.getCreatedAt());
         res.setUpdatedAt(entity.getUpdatedAt());
         return res;

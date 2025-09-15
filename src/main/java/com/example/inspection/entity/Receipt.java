@@ -112,6 +112,9 @@ public class Receipt {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "files", length = 1000)
+    private String files;
+
     // Relationships
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ExecutionUnit> executionUnits;
