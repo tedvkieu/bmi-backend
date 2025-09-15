@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MachineRequest {
-    private Long receiptId; // liên kết Receipt
+    private Long dossierId; // liên kết Receipt
     private String registrationNo;
     private String itemName;
     private String brand;

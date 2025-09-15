@@ -5,15 +5,15 @@ import org.springframework.stereotype.Component;
 
 import com.example.inspection.dto.request.MachineRequest;
 import com.example.inspection.dto.response.MachineResponse;
+import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.Machine;
-import com.example.inspection.entity.Receipt;
 
 @Component
 public class MachineMapper {
 
-    public Machine toEntity(MachineRequest request, Receipt receipt) {
+    public Machine toEntity(MachineRequest request, Dossier dossier) {
         Machine machine = new Machine();
-        machine.setReceipt(receipt);
+        machine.setDossier(dossier);
         machine.setRegistrationNo(request.getRegistrationNo());
         machine.setItemName(request.getItemName());
         machine.setBrand(request.getBrand());
@@ -28,8 +28,8 @@ public class MachineMapper {
         return machine;
     }
 
-    public void updateEntity(Machine machine, MachineRequest request, Receipt receipt) {
-        machine.setReceipt(receipt);
+    public void updateEntity(Machine machine, MachineRequest request, Dossier dossier) {
+        machine.setDossier(dossier);
         machine.setRegistrationNo(request.getRegistrationNo());
         machine.setItemName(request.getItemName());
         machine.setBrand(request.getBrand());
@@ -46,7 +46,7 @@ public class MachineMapper {
     public MachineResponse toResponse(Machine machine) {
         MachineResponse response = new MachineResponse();
         response.setMachineId(machine.getMachineId());
-        response.setReceiptId(machine.getReceipt().getReceiptId());
+        response.setDossierId(machine.getDossier().getDossierId());
         response.setRegistrationNo(machine.getRegistrationNo());
         response.setItemName(machine.getItemName());
         response.setBrand(machine.getBrand());

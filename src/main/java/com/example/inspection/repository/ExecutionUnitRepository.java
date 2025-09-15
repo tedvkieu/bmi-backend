@@ -1,10 +1,11 @@
-package com.example.inspection.repository;
+// package com.example.inspection.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+// import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.stereotype.Repository;
 
-import com.example.inspection.entity.ExecutionUnit;
+// import com.example.inspection.entity.ExecutionUnit;
 
-@Repository
-public interface ExecutionUnitRepository extends JpaRepository<ExecutionUnit, Long> {
-}
+// @Repository
+// public interface ExecutionUnitRepository extends JpaRepository<ExecutionUnit,
+// Long> {
+// }

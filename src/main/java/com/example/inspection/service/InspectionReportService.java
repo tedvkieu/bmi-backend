@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.inspection.dto.response.InspectionReportData;
 import com.example.inspection.entity.Customer;
+import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.Machine;
-import com.example.inspection.entity.Receipt;
-import com.example.inspection.repository.ReceiptRepository;
+import com.example.inspection.repository.DossierRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 public class InspectionReportService {
 
-    private final ReceiptRepository receiptRepository;
+    private final DossierRepository dossierRepository;
     private final DocumentGenerationManager documentGenerationManager; // Sử dụng manager mới
 
     /**
@@ -99,20 +99,20 @@ public class InspectionReportService {
     public InspectionReportData getInspectionReportData(Long receiptId) {
         log.debug("Fetching inspection report data for receipt ID: {}", receiptId);
 
-        Optional<Receipt> receiptOpt = receiptRepository.findByIdWithDetails(receiptId);
+        Optional<Dossier> dossierOpt = dossierRepository.findByIdWithDetails(receiptId);
 
-        if (receiptOpt.isEmpty()) {
-            log.error("Receipt not found with ID: {}", receiptId);
-            throw new RuntimeException("Receipt not found with ID: " + receiptId);
+        if (dossierOpt.isEmpty()) {
+            log.error("Dossier not found with ID: {}", receiptId);
+            throw new RuntimeException("Dossier not found with ID: " + receiptId);
         }
 
-        Receipt receipt = receiptOpt.get();
+        Dossier dossier = dossierOpt.get();
         InspectionReportData data = new InspectionReportData();
 
-        log.debug("Processing receipt data. Receipt registration no: {}", receipt.getRegistrationNo());
+        log.debug("Processing dossier data. Dossier registration no: {}", dossier.getRegistrationNo());
 
         // Customer information (customerRelated is the importer)
-        Customer importer = receipt.getCustomerRelated();
+        Customer importer = dossier.getCustomerRelated();
         if (importer != null) {
             log.debug("Processing importer data: {}", importer.getName());
             data.setImporterName(importer.getName());
@@ -132,25 +132,25 @@ public class InspectionReportService {
         // For now, using empty string as placeholder
         data.setTaxCode(""); // TODO: Implement logic to get tax code from InspectionFile
 
-        // Receipt information
-        data.setBillOfLading(receipt.getBillOfLading());
-        data.setDeclarationNo(receipt.getDeclarationNo());
-        data.setRegistrationNo(receipt.getRegistrationNo());
-        data.setInspectionLocation(receipt.getInspectionLocation());
+        // Dossier information
+        data.setBillOfLading(dossier.getBillOfLading());
+        data.setDeclarationNo(dossier.getDeclarationNo());
+        data.setRegistrationNo(dossier.getRegistrationNo());
+        data.setInspectionLocation(dossier.getInspectionLocation());
 
         // Format dates
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         data.setCurrentDate(LocalDate.now().format(formatter));
 
-        if (receipt.getInspectionDate() != null) {
-            data.setInspectionDate(receipt.getInspectionDate().format(formatter));
+        if (dossier.getInspectionDate() != null) {
+            data.setInspectionDate(dossier.getInspectionDate().format(formatter));
         } else {
             data.setInspectionDate("");
         }
 
         // Machine information (get first machine)
-        if (receipt.getMachines() != null && !receipt.getMachines().isEmpty()) {
-            Machine firstMachine = receipt.getMachines().get(0);
+        if (dossier.getMachines() != null && !dossier.getMachines().isEmpty()) {
+            Machine firstMachine = dossier.getMachines().get(0);
             log.debug("Processing machine data: {}", firstMachine.getItemName());
 
             data.setItemName(firstMachine.getItemName());
@@ -260,21 +260,21 @@ public class InspectionReportService {
                 return false;
             }
 
-            Optional<Receipt> receiptOpt = receiptRepository.findByIdWithDetails(receiptId);
-            if (receiptOpt.isEmpty()) {
-                log.warn("Receipt not found for canGenerateReport: {}", receiptId);
+            Optional<Dossier> dossierOpt = dossierRepository.findByIdWithDetails(receiptId);
+            if (dossierOpt.isEmpty()) {
+                log.warn("Dossier not found for canGenerateReport: {}", receiptId);
                 return false;
             }
 
-            Receipt receipt = receiptOpt.get();
+            Dossier dossier = dossierOpt.get();
 
             // Check if has minimum required data
-            boolean hasCustomer = receipt.getCustomerRelated() != null;
-            boolean hasMachines = receipt.getMachines() != null && !receipt.getMachines().isEmpty();
+            boolean hasCustomer = dossier.getCustomerRelated() != null;
+            boolean hasMachines = dossier.getMachines() != null && !dossier.getMachines().isEmpty();
 
             boolean canGenerate = hasCustomer && hasMachines;
 
-            log.debug("Can generate report for receipt {}: customer={}, machines={}, result={}",
+            log.debug("Can generate report for dossier {}: customer={}, machines={}, result={}",
                     receiptId, hasCustomer, hasMachines, canGenerate);
 
             return canGenerate;

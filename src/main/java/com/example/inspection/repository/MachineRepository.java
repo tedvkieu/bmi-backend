@@ -11,5 +11,5 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
 
     Optional<Machine> findByMachineId(Long id);
 
-    List<Machine> findByReceipt_ReceiptId(Long receiptId);
+    List<Machine> findByDossier_DossierId(Long dossierId);
 }

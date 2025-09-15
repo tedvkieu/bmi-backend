@@ -14,44 +14,44 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.inspection.dto.request.ReceiptRequest;
 import com.example.inspection.dto.response.ReceiptResponse;
-import com.example.inspection.service.ReceiptService;
+import com.example.inspection.service.DossierService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/receipts")
+@RequestMapping("/api/dossiers")
 @RequiredArgsConstructor
-public class ReceiptController {
+public class DossierController {
 
-    private final ReceiptService receiptService;
+    private final DossierService dossierService;
 
     @PostMapping
     public ResponseEntity<ReceiptResponse> create(@RequestBody ReceiptRequest request) {
-        return ResponseEntity.ok(receiptService.createReceipt(request));
+        return ResponseEntity.ok(dossierService.createDossier(request));
     }
 
     @GetMapping
     public ResponseEntity<Page<ReceiptResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(receiptService.getAll(page, size));
+        return ResponseEntity.ok(dossierService.getAll(page, size));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReceiptResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(receiptService.getReceiptById(id));
+        return ResponseEntity.ok(dossierService.getDossierById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ReceiptResponse> update(
             @PathVariable Long id,
             @RequestBody ReceiptRequest request) {
-        return ResponseEntity.ok(receiptService.updateReceipt(id, request));
+        return ResponseEntity.ok(dossierService.updateDossier(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        receiptService.deleteReceipt(id);
+        dossierService.deleteDossier(id);
         return ResponseEntity.noContent().build();
     }
 }

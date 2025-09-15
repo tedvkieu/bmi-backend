@@ -6,28 +6,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.inspection.entity.Receipt;
+import com.example.inspection.entity.Dossier;
 
-public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
+public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
-        @Query("SELECT r FROM Receipt r " +
+        @Query("SELECT r FROM Dossier r " +
                         "LEFT JOIN FETCH r.customerRelated " +
                         "LEFT JOIN FETCH r.customerSubmit " +
                         "LEFT JOIN FETCH r.machines " +
-                        "WHERE r.receiptId = :receiptId")
-        Optional<Receipt> findByIdWithDetails(@Param("receiptId") Long receiptId);
+                        "WHERE r.dossierId = :dossierId")
+        Optional<Dossier> findByIdWithDetails(@Param("dossierId") Long dossierId);
 
-        @Query("SELECT r FROM Receipt r " +
+        @Query("SELECT r FROM Dossier r " +
                         "LEFT JOIN FETCH r.customerSubmit " +
                         "LEFT JOIN FETCH r.customerRelated " +
                         "LEFT JOIN FETCH r.inspectionType " +
-                        "WHERE r.receiptId = :receiptId")
-        Optional<Receipt> findByIdWithCustomers(@Param("receiptId") Long receiptId);
+                        "WHERE r.dossierId = :dossierId")
+        Optional<Dossier> findByIdWithCustomers(@Param("dossierId") Long dossierId);
 
-        @Query("SELECT r FROM Receipt r " +
+        @Query("SELECT r FROM Dossier r " +
                         "LEFT JOIN FETCH r.machines " +
-                        "WHERE r.receiptId = :receiptId")
-        Optional<Receipt> findByIdWithMachines(@Param("receiptId") Long receiptId);
+                        "WHERE r.dossierId = :dossierId")
+        Optional<Dossier> findByIdWithMachines(@Param("dossierId") Long dossierId);
 
         //
 

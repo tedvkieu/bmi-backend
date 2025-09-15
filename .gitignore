@@ -68,3 +68,8 @@ application-*.properties
 
 # Nếu bạn có file cấu hình nhạy cảm
 secret/
+
+resources/application-dev.yml
+resources/application-prod.yml
+resources/data.sql
+resources/schema.sql

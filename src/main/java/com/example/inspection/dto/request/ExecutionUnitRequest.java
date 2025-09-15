@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExecutionUnitRequest {
-    private Long receiptId;
+    private Long dossierId;
     private Long userId;
     private String roleInCase;
 }

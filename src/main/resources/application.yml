@@ -1,69 +1,59 @@
 spring:
   application:
-    name: inspection-bmi
+    name: ${SPRING_APPLICATION_NAME:inspection-bmi}
+
   datasource:
-    url: jdbc:mysql://localhost:3306/inspection_system
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/inspection_system}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:123456}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:com.mysql.cj.jdbc.Driver}
+
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:always}
+      schema-locations: ${SPRING_SQL_INIT_SCHEMA-LOCATIONS:classpath:schema.sql}
+      data-locations: ${SPRING_SQL_INIT_DATA-LOCATIONS:classpath:data.sql}
+      continue-on-error: ${SPRING_SQL_INIT_CONTINUE-ON-ERROR:false}
 
   jpa:
     hibernate:
-      ddl-auto: create # create | create-drop | update | validate | none
-    show-sql: false
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL-AUTO:validate} # create | create-drop | update | validate | none
+    show-sql: ${SPRING_JPA_SHOW-SQL:false}
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
+        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:true}
+
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
-# Template and temp path configuration
+      max-file-size: ${SPRING_SERVLET_MULTIPART_MAX-FILE-SIZE:50MB}
+      max-request-size: ${SPRING_SERVLET_MULTIPART_MAX-REQUEST-SIZE:50MB}
+
 app:
-  template.path: classpath:templates/
-  temp.path: /tmp/
-  libreoffice.path: /Applications/LibreOffice.app/Contents/MacOS/soffice
+  template:
+    path: ${APP_TEMPLATE_PATH:classpath:templates/}
+  temp:
+    path: ${APP_TEMP_PATH:/tmp/}
+  libreoffice:
+    path: ${APP_LIBREOFFICE_PATH:/Applications/LibreOffice.app/Contents/MacOS/soffice}
   document:
     generation:
-      strategy: docx-only # Options: docx-only, simple, improved, template-engine, auto
+      strategy: ${APP_DOCUMENT_GENERATION_STRATEGY:docx-only}
   export:
-    dir: uploads/exports
-    url: /api/exports/**
+    dir: ${APP_EXPORT_DIR:uploads/exports}
+    url: ${APP_EXPORT_URL:/api/exports/**}
 
-  # Logging SQL (optional, để debug)
 logging:
   level:
-    org.hibernate.SQL: OFF
-    org.hibernate.type.descriptor.sql.BasicBinder: OFF
+    org.hibernate.SQL: ${LOGGING_LEVEL_ORG_HIBERNATE_SQL:OFF}
+    org.hibernate.type.descriptor.sql.BasicBinder: ${LOGGING_LEVEL_ORG_HIBERNATE_TYPE_DESCRIPTOR_SQL_BASICBINDER:OFF}
 
-# JWT Configuration
 jwt:
-  secret: mySecretKey123456789012345678901234567890
-  expiration: 86400000
+  secret: ${JWT_SECRET:mySecretKey123456789012345678901234567890}
+  expiration: ${JWT_EXPIRATION:86400000}
 
-# CORS Configuration
 cors:
-  allowed-origins:
-    - http://localhost:3000
-    - http://127.0.0.1:3000
-  allowed-methods:
-    - GET
-    - POST
-    - PUT
-    - DELETE
-    - OPTIONS
-  allowed-headers: "*"
-  allow-credentials: true
-
-custom:
-  data:
-    user:
-      fullName: Admin
-      username: admin
-      password: $2a$10$zkKynXsI4WzSDCjoD0jcs.IKLtIBoMnwKz6pBUYBFa2PDFjhbxuve
-      email: admin@gmail.com
-      role: ADMIN
-      phone: 0123456789
-      dob: 2000-01-01
-      note: Test user for login
+  allowed-origins: ${CORS_ALLOWED-ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
+  allowed-methods: ${CORS_ALLOWED-METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED-HEADERS:*}
+  allow-credentials: ${CORS_ALLOW-CREDENTIALS:true}

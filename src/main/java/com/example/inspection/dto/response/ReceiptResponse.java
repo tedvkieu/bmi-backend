@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.example.inspection.entity.Receipt.CertificateStatus;
+import com.example.inspection.entity.Dossier.CertificateStatus;
 
 @Data
 public class ReceiptResponse {

@@ -34,8 +34,8 @@ public class Machine {
     private Long machineId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_id", nullable = false)
-    private Receipt receipt;
+    @JoinColumn(name = "dossier_id", nullable = false)
+    private Dossier dossier;
 
     @Column(name = "registration_no", length = 100)
     private String registrationNo;

@@ -1,11 +1,11 @@
 package com.example.inspection.service;
 
-import com.example.inspection.entity.Receipt;
-import com.example.inspection.mapper.ReceiptMapper;
 import com.example.inspection.entity.Machine;
+import com.example.inspection.mapper.DossierMapper;
+import com.example.inspection.repository.DossierRepository;
 import com.example.inspection.dto.response.ReceiptResponse;
 import com.example.inspection.entity.Customer;
-import com.example.inspection.repository.ReceiptRepository;
+import com.example.inspection.entity.Dossier;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +21,17 @@ import java.util.List;
 public class DocumentGenerationService {
 
     @Autowired
-    private ReceiptRepository receiptRepository;
+    private DossierRepository dossierRepository;
 
     @Autowired
-    private ReceiptMapper receiptMapper;
+    private DossierMapper dossierMapper;
 
     private static final String TEMPLATE_PATH = "templates/inspection_report_template.docx";
     private static final String EXPORT_DIRECTORY = "uploads/exports/";
 
     public ReceiptResponse generateInspectionReport(Long receiptId) throws Exception {
         // Get receipt data with all related entities
-        Receipt receipt = receiptRepository.findById(receiptId)
+        Dossier dossier = dossierRepository.findById(receiptId)
                 .orElseThrow(() -> new RuntimeException("Receipt not found with id: " +
                         receiptId));
 
@@ -40,14 +40,14 @@ public class DocumentGenerationService {
         XWPFDocument document = new XWPFDocument(templateResource.getInputStream());
 
         // Get data for replacement
-        Customer importer = receipt.getCustomerRelated();
+        Customer importer = dossier.getCustomerRelated();
 
         // InspectionFile inspectionFile =
-        // receipt.getCustomerSubmit().getInspectionFiles() != null
-        // && !receipt.getCustomerSubmit().getInspectionFiles().isEmpty()
-        // ? receipt.getCustomerSubmit().getInspectionFiles().get(0)
+        // dossier.getCustomerSubmit().getInspectionFiles() != null
+        // && !dossier.getCustomerSubmit().getInspectionFiles().isEmpty()
+        // ? dossier.getCustomerSubmit().getInspectionFiles().get(0)
         // : null;
-        List<Machine> machines = receipt.getMachines();
+        List<Machine> machines = dossier.getMachines();
         Machine firstMachine = machines.isEmpty() ? null : machines.get(0);
 
         // Replace placeholders in document
@@ -61,11 +61,11 @@ public class DocumentGenerationService {
         replaceTextInDocument(document, "${email}",
                 importer != null ? importer.getEmail() : "");
         replaceTextInDocument(document, "${billOfLading}",
-                receipt.getBillOfLading() != null ? receipt.getBillOfLading() : "");
+                dossier.getBillOfLading() != null ? dossier.getBillOfLading() : "");
         replaceTextInDocument(document, "${declarationNo}",
-                receipt.getDeclarationNo() != null ? receipt.getDeclarationNo() : "");
+                dossier.getDeclarationNo() != null ? dossier.getDeclarationNo() : "");
         replaceTextInDocument(document, "${registrationNo}",
-                receipt.getRegistrationNo() != null ? receipt.getRegistrationNo() : "");
+                dossier.getRegistrationNo() != null ? dossier.getRegistrationNo() : "");
 
         // Machine information (first machine)
         if (firstMachine != null) {
@@ -97,7 +97,7 @@ public class DocumentGenerationService {
         }
 
         // ✅ Đặt tên file: có billOfLading
-        String billOfLading = receipt.getBillOfLading() != null ? receipt.getBillOfLading() : "no-bol";
+        String billOfLading = dossier.getBillOfLading() != null ? dossier.getBillOfLading() : "no-bol";
         billOfLading = billOfLading.replaceAll("[^a-zA-Z0-9_-]", "_"); // tránh ký tự lạ
 
         String fileName = "inspection_report_" + billOfLading + "_" + receiptId + "_" +
@@ -110,11 +110,11 @@ public class DocumentGenerationService {
         document.close();
 
         // ✅ Lưu đường dẫn vào entity
-        receipt.setFiles(fileName);
+        dossier.setFiles(fileName);
         System.out.println("Generated document path: " + fileName);
-        receiptRepository.save(receipt);
+        dossierRepository.save(dossier);
 
-        return receiptMapper.toResponse(receipt);
+        return dossierMapper.toResponse(dossier);
     }
 
     private void replaceTextInDocument(XWPFDocument document, String placeholder,

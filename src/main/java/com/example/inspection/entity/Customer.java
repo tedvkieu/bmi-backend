@@ -31,6 +31,9 @@ public class Customer {
     @Column(name = "email", length = 100)
     private String email;
 
+    @Column(name = "password", length = 255)
+    private String password;
+
     @Column(name = "dob")
     private LocalDate dob;
 
@@ -57,10 +60,10 @@ public class Customer {
 
     // Relationships
     @OneToMany(mappedBy = "customerSubmit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Receipt> submittedReceipts;
+    private List<Dossier> submittedDossiers;
 
     @OneToMany(mappedBy = "customerRelated", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Receipt> relatedReceipts;
+    private List<Dossier> relatedDossiers;
 
     // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch =
     // FetchType.LAZY)

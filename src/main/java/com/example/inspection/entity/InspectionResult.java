@@ -35,8 +35,8 @@ public class InspectionResult {
     private Machine machine;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_id", nullable = false)
-    private Receipt receipt;
+    @JoinColumn(name = "dossier_id", nullable = false)
+    private Dossier dossier;
 
     // Snapshot fields from Machine at inspection time
     @Column(name = "snapshot_registration_no", length = 100)
