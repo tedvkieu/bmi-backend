@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ExecutionUnitResponse {
     private Long executionUnitId;
     private Long receiptId;
-    private Long employeeId;
+    private Long userId;
     private String roleInCase;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

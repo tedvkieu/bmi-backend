@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # create | create-drop | update | validate | none
+      ddl-auto: create # create | create-drop | update | validate | none
     show-sql: false
     properties:
       hibernate:
@@ -58,12 +58,12 @@ cors:
 
 custom:
   data:
-    employee:
+    user:
       fullName: Admin
       username: admin
       password: $2a$10$zkKynXsI4WzSDCjoD0jcs.IKLtIBoMnwKz6pBUYBFa2PDFjhbxuve
       email: admin@gmail.com
-      position: MANAGER
+      role: ADMIN
       phone: 0123456789
       dob: 2000-01-01
-      note: Test employee for login
+      note: Test user for login
