@@ -1,18 +1,13 @@
 package com.example.inspection.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.inspection.dto.response.ReceiptResponse;
 import com.example.inspection.service.DocumentGenerationService;
-
-import java.io.File;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -21,6 +16,7 @@ public class DocumentController {
     @Autowired
     private DocumentGenerationService documentGenerationService;
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @GetMapping("/generate-inspection-report/{receiptId}")
     public ResponseEntity<?> generateInspectionReport(@PathVariable Long receiptId) {
         try {

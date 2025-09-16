@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -26,6 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null) {
+            log.debug("JWT Filter: No Authorization header for {} {}", request.getMethod(), request.getRequestURI());
+        }
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -45,10 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         // Thêm thông tin user vào authentication
                         authToken.setDetails(userId);
                         SecurityContextHolder.getContext().setAuthentication(authToken);
+                        log.debug("JWT Filter: Authenticated {} with role {} for {} {}", username, role,
+                                request.getMethod(), request.getRequestURI());
+                    } else {
+                        log.debug("JWT Filter: Token validation failed for {} {}", request.getMethod(),
+                                request.getRequestURI());
                     }
                 }
             } catch (Exception e) {
-                // Token không hợp lệ, tiếp tục filter chain
+                log.debug("JWT Filter: Exception parsing token for {} {}: {}", request.getMethod(),
+                        request.getRequestURI(), e.getMessage());
             }
         }
 

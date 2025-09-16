@@ -8,6 +8,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.io.FileOutputStream;
@@ -35,6 +36,7 @@ public class InspectionReportController {
      * Generate inspection report PDF
      * POST /api/inspection-reports/generate-pdf
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @PostMapping("/generate-pdf")
     public ResponseEntity<byte[]> generateInspectionReportPdf(
             @Valid @RequestBody InspectionReportRequest request) {
@@ -116,6 +118,7 @@ public class InspectionReportController {
     /**
      * Generate inspection report PDF by receipt ID (GET method)
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @GetMapping("/{receiptId}/pdf")
     public ResponseEntity<byte[]> generateInspectionReportPdfByGet(
             @PathVariable Long receiptId,
@@ -184,6 +187,7 @@ public class InspectionReportController {
     /**
      * Preview inspection report data
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @GetMapping("/{receiptId}/preview")
     public ResponseEntity<?> previewInspectionReportData(@PathVariable Long receiptId) {
         try {
@@ -219,6 +223,7 @@ public class InspectionReportController {
     /**
      * Health check endpoint for PDF generation service
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/health")
     public ResponseEntity<?> healthCheck() {
         try {
@@ -310,6 +315,7 @@ public class InspectionReportController {
     /**
      * Test endpoint to verify service is working
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/test")
     public ResponseEntity<String> testService() {
         try {
@@ -324,6 +330,7 @@ public class InspectionReportController {
     /**
      * Test all document generation services
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/test-all-services")
     public ResponseEntity<String> testAllServices() {
         try {
@@ -339,6 +346,7 @@ public class InspectionReportController {
      * Generate filled DOCX (no PDF conversion) - Fast endpoint
      * GET /api/inspection-reports/{receiptId}/docx
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @GetMapping("/{receiptId}/docx")
     public ResponseEntity<byte[]> generateFilledDocx(
             @PathVariable Long receiptId,
@@ -408,6 +416,7 @@ public class InspectionReportController {
      * Generate filled DOCX (no PDF conversion) - Fast endpoint
      * POST /api/inspection-reports/generate-docx
      */
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @PostMapping("/generate-docx")
     public ResponseEntity<byte[]> generateFilledDocx(
             @Valid @RequestBody InspectionReportRequest request) {

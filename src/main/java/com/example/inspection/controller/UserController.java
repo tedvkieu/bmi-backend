@@ -1,6 +1,7 @@
 package com.example.inspection.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final UserPermissionService userPermissionService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest request) {
         // Kiểm tra quyền tạo ADMIN
@@ -39,6 +41,7 @@ public class UserController {
         return ResponseEntity.ok(userService.create(request));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
         UserResponse user = userService.getById(id);
@@ -62,6 +65,7 @@ public class UserController {
         throw new AccessDeniedException("Bạn không có quyền xem thông tin user này");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAll() {
         if (userPermissionService.isAdmin()) {
@@ -82,6 +86,7 @@ public class UserController {
         throw new AccessDeniedException("Bạn không có quyền xem danh sách user");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest request) {
         UserResponse existingUser = userService.getById(id);
@@ -110,6 +115,7 @@ public class UserController {
         return ResponseEntity.ok(userService.update(id, request));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         UserResponse existingUser = userService.getById(id);
@@ -132,6 +138,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping("/username/{username}")
     public ResponseEntity<UserResponse> getByUsername(@PathVariable String username) {
         UserResponse user = userService.getByUsername(username);
@@ -154,6 +161,7 @@ public class UserController {
         throw new AccessDeniedException("Bạn không có quyền xem thông tin user này");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping("/email/{email}")
     public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
         UserResponse user = userService.getByEmail(email);
@@ -177,6 +185,7 @@ public class UserController {
     }
 
     // API đặc biệt cho MANAGER - chỉ lấy danh sách nhân viên
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/staff")
     public ResponseEntity<List<UserResponse>> getStaffOnly() {
         if (!userPermissionService.isManager()) {
@@ -193,6 +202,7 @@ public class UserController {
     }
 
     // API đặc biệt cho MANAGER - tạo nhân viên mới
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/staff")
     public ResponseEntity<UserResponse> createStaff(@RequestBody UserRequest request) {
         if (!userPermissionService.isManager()) {
@@ -210,6 +220,7 @@ public class UserController {
     }
 
     // API đặc biệt cho ADMIN - lấy tất cả user
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/all")
     public ResponseEntity<List<UserResponse>> getAllForAdmin() {
         if (!userPermissionService.isAdmin()) {
@@ -220,6 +231,7 @@ public class UserController {
     }
 
     // API kiểm tra trạng thái ADMIN
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/status")
     public ResponseEntity<Map<String, Object>> getAdminStatus() {
         Map<String, Object> status = new HashMap<>();
