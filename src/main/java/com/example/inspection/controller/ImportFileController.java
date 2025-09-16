@@ -1,6 +1,7 @@
 package com.example.inspection.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,7 @@ public class ImportFileController {
         this.importExcelService = importExcelService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PostMapping("/upload-excel")
     public ResponseEntity<?> uploadCustomerExcel(@RequestParam("file") MultipartFile file) {
         try {

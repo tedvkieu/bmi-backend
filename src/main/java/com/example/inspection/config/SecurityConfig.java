@@ -3,6 +3,7 @@ package com.example.inspection.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -63,10 +65,18 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        // Public auth endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Admin-only URL group
+                        .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
+
+                        // Users base requires at least ADMIN or MANAGER; fine-grained via @PreAuthorize
                         .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER")
+
+                        // Everything else must be authenticated; fine-grained via @PreAuthorize
                         .requestMatchers("/api/profile/**").authenticated()
-                        .requestMatchers("/api/**").permitAll() // Tạm thời permit all cho testing
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated());
 
         return http.build();
