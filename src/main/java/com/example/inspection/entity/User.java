@@ -73,7 +73,8 @@ public class User {
         DOCUMENT_STAFF("Nhân viên tài liệu"),
         INSPECTOR("Kiểm định viên"),
         MANAGER("Quản lý"),
-        ADMIN("Quản trị viên");
+        ADMIN("Quản trị viên"),
+        CUSTOMER("Khách hàng");
 
         private final String description;
 
