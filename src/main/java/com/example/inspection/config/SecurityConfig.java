@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -74,6 +75,9 @@ public class SecurityConfig {
                         // Users base requires at least ADMIN or MANAGER; fine-grained via @PreAuthorize
                         // .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/users/**").permitAll()
+
+                        // Public customer contact submission
+                        .requestMatchers(HttpMethod.POST, "/api/customers/public").permitAll()
 
                         // Everything else must be authenticated; fine-grained via @PreAuthorize
                         .requestMatchers("/api/profile/**").authenticated()

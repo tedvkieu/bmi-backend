@@ -28,6 +28,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    // Public contact submission (no auth)
+    @PostMapping("/public")
+    public ResponseEntity<CustomerResponse> publicContact(@RequestBody CustomerRequest request) {
+        return ResponseEntity.ok(customerService.create(request));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PostMapping
     public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {

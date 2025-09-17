@@ -14,11 +14,13 @@ import com.example.inspection.entity.Customer;
 import com.example.inspection.entity.Dossier;
 import com.example.inspection.entity.InspectionType;
 import com.example.inspection.exception.ResourceNotFoundException;
+import com.example.inspection.exception.AccessDeniedException;
 import com.example.inspection.mapper.DossierMapper;
 import com.example.inspection.repository.CustomerRepository;
 import com.example.inspection.repository.DossierRepository;
 import com.example.inspection.repository.InspectionTypeRepository;
 import com.example.inspection.service.DossierService;
+import com.example.inspection.service.UserPermissionService;
 
 import jakarta.transaction.Transactional;
 
@@ -35,6 +37,7 @@ public class DossierServiceImpl implements DossierService {
         private final CustomerRepository customerRepository;
         private final InspectionTypeRepository inspectionTypeRepository;
         private final DossierMapper dossierMapper;
+        private final UserPermissionService userPermissionService;
 
         private final DataFormatter formatter = new DataFormatter();
         private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -81,6 +84,14 @@ public class DossierServiceImpl implements DossierService {
         public ReceiptResponse updateDossier(Long id, ReceiptRequest request) {
                 Dossier dossier = dossierRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));
+
+                // If dossier is OBTAINED, block updates for ISO_STAFF and DOCUMENT_STAFF
+                // (read-only)
+                if (dossier.getCertificateStatus() == Dossier.CertificateStatus.OBTAINED) {
+                        if (userPermissionService.isIsoStaff() || userPermissionService.isDocumentStaff()) {
+                                throw new AccessDeniedException("Hồ sơ đã đạt - chỉ được xem, không được sửa");
+                        }
+                }
 
                 Customer submit = customerRepository.findById(request.getCustomerSubmitId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Customer submit not found"));
