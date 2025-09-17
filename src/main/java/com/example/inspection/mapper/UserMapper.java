@@ -3,6 +3,7 @@ package com.example.inspection.mapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.inspection.dto.request.RegisterRequest;
 import com.example.inspection.dto.request.UserRequest;
 import com.example.inspection.dto.response.UserResponse;
 import com.example.inspection.entity.User;
@@ -58,5 +59,16 @@ public class UserMapper {
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());
         return response;
+    }
+    public User toEntity(RegisterRequest request) {
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setUsername(request.getFullName());
+        user.setRole(request.getRole());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        user.setIsActive(true); 
+        return user;
     }
 }

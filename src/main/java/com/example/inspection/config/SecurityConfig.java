@@ -1,5 +1,7 @@
 package com.example.inspection.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,15 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -72,7 +72,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
 
                         // Users base requires at least ADMIN or MANAGER; fine-grained via @PreAuthorize
-                        .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER")
+                        // .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/users/**").permitAll()
 
                         // Everything else must be authenticated; fine-grained via @PreAuthorize
                         .requestMatchers("/api/profile/**").authenticated()
