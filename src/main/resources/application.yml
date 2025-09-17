@@ -10,7 +10,7 @@ spring:
 
   sql:
     init:
-      mode: ${SPRING_SQL_INIT_MODE:always}
+      mode: ${SPRING_SQL_INIT_MODE:never} # always | never | always-if-empty | never-if-empty
       schema-locations: ${SPRING_SQL_INIT_SCHEMA-LOCATIONS:classpath:schema.sql}
       data-locations: ${SPRING_SQL_INIT_DATA-LOCATIONS:classpath:data.sql}
       continue-on-error: ${SPRING_SQL_INIT_CONTINUE-ON-ERROR:false}

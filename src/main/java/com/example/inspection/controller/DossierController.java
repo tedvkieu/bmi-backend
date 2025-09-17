@@ -47,7 +47,7 @@ public class DossierController {
         return ResponseEntity.ok(dossierService.getDossierById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF')")
     @PutMapping("/{id}")
     public ResponseEntity<ReceiptResponse> update(
             @PathVariable Long id,

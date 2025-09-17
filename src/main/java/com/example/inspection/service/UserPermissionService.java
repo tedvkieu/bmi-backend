@@ -25,6 +25,18 @@ public class UserPermissionService {
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_MANAGER"));
     }
 
+    public boolean isIsoStaff() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ISO_STAFF"));
+    }
+
+    public boolean isDocumentStaff() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_DOCUMENT_STAFF"));
+    }
+
     public boolean isAdminOrManager() {
         return isAdmin() || isManager();
     }
