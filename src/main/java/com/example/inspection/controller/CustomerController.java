@@ -40,6 +40,11 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.create(request));
     }
 
+    @PostMapping("/public")
+    public ResponseEntity<CustomerResponse> customerRegister(@RequestBody CustomerRequest request) {
+        return ResponseEntity.ok(customerService.create(request));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponse> getById(@PathVariable Long id) {
