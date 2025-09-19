@@ -82,7 +82,7 @@ public class SecurityConfig {
                         // Everything else must be authenticated; fine-grained via @PreAuthorize
                         .requestMatchers("/api/profile/**").authenticated()
                         .requestMatchers("/api/customers/public").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();

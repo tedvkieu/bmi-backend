@@ -1,7 +1,9 @@
--- ========================================
--- FILE: 01_base_schema.sql
--- Base tables (existing system)
--- ========================================
+/*
+========================================
+FILE: 01_base_schema.sql
+Base tables (existing system)
+========================================
+*/
 
 -- Drop existing tables if they exist (in reverse order of dependencies)
 DROP TABLE IF EXISTS `inspection_results`;
@@ -11,7 +13,7 @@ DROP TABLE IF EXISTS `inspection_types`;
 DROP TABLE IF EXISTS `customers`;
 DROP TABLE IF EXISTS `users`;
 
--- Create users table first (no dependencies)
+/* Create users table first (no dependencies) */
 CREATE TABLE `users` (
     `user_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `full_name` VARCHAR(255) NOT NULL,
@@ -27,7 +29,7 @@ CREATE TABLE `users` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create customers table (no dependencies)
+/* Create customers table (no dependencies) */
 CREATE TABLE `customers` (
     `customer_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
@@ -43,7 +45,7 @@ CREATE TABLE `customers` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create inspection_types table (no dependencies)
+/* Create inspection_types table (no dependencies) */
 CREATE TABLE `inspection_types` (
     `inspection_type_id` VARCHAR(255) PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
@@ -52,7 +54,7 @@ CREATE TABLE `inspection_types` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create dossiers table (depends on customers, inspection_types)
+/* Create dossiers table (depends on customers, inspection_types) */
 CREATE TABLE `dossiers` (
     `dossier_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `registration_no` VARCHAR(100),
@@ -84,7 +86,7 @@ CREATE TABLE `dossiers` (
     FOREIGN KEY (`created_by_user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
 );
 
--- Create machines table (depends on dossiers)
+/* Create machines table (depends on dossiers) */
 CREATE TABLE `machines` (
     `machine_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `dossier_id` BIGINT NOT NULL,
@@ -104,7 +106,7 @@ CREATE TABLE `machines` (
     FOREIGN KEY (`dossier_id`) REFERENCES `dossiers`(`dossier_id`) ON DELETE CASCADE
 );
 
--- Create inspection_results table (depends on machines, dossiers)
+/* Create inspection_results table (depends on machines, dossiers) */
 CREATE TABLE `inspection_results` (
     `inspection_result_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `machine_id` BIGINT NOT NULL,
@@ -133,11 +135,12 @@ CREATE INDEX `idx_dossiers_certificate_status` ON `dossiers`(`certificate_status
 CREATE INDEX `idx_customers_tax_code` ON `customers`(`tax_code`);
 CREATE INDEX `idx_machines_serial_number` ON `machines`(`serial_number`);
 
+/*
 -- ========================================
 -- FILE: 02_evaluation_extension_schema.sql
 -- Extension tables for evaluation system
 -- ========================================
-
+*/
 -- Bảng lưu trữ vai trò khi thực hiện giám định
 CREATE TABLE `inspection_execution_roles` (
     `role_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -156,6 +159,7 @@ CREATE TABLE `dossier_inspection_team` (
     `user_id` BIGINT NOT NULL,
     `execution_role_id` BIGINT NOT NULL,
     `assigned_date` DATE,
+    `assigned_task` VARCHAR(50),
     `is_active` BOOLEAN NOT NULL DEFAULT TRUE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -165,7 +169,7 @@ CREATE TABLE `dossier_inspection_team` (
     UNIQUE KEY `unique_dossier_user` (`dossier_id`, `user_id`)
 );
 
--- Bảng chính lưu trữ phiếu theo dõi đánh giá hoàn tất vụ giám định
+/* Bảng chính lưu trữ phiếu theo dõi đánh giá hoàn tất vụ giám định */
 CREATE TABLE `inspection_completion_evaluations` (
     `evaluation_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `dossier_id` BIGINT NOT NULL,
@@ -183,7 +187,7 @@ CREATE TABLE `inspection_completion_evaluations` (
     UNIQUE KEY `unique_dossier_evaluation` (`dossier_id`)
 );
 
--- Bảng lưu trữ các tiêu chí đánh giá (categories)
+/* Bảng lưu trữ các tiêu chí đánh giá (categories) */
 CREATE TABLE `evaluation_categories` (
     `category_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `category_code` VARCHAR(50) NOT NULL UNIQUE,
@@ -194,7 +198,7 @@ CREATE TABLE `evaluation_categories` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Bảng lưu trữ các tiêu chí đánh giá chi tiết
+/* Bảng lưu trữ các tiêu chí đánh giá chi tiết */
 CREATE TABLE `evaluation_criteria` (
     `criteria_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `category_id` BIGINT NOT NULL,
@@ -210,7 +214,7 @@ CREATE TABLE `evaluation_criteria` (
     UNIQUE KEY `unique_category_code` (`category_id`, `criteria_code`)
 );
 
--- Bảng lưu trữ kết quả đánh giá cho từng tiêu chí
+/* Bảng lưu trữ kết quả đánh giá cho từng tiêu chí */
 CREATE TABLE `evaluation_results` (
     `result_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `evaluation_id` BIGINT NOT NULL,
@@ -228,7 +232,7 @@ CREATE TABLE `evaluation_results` (
     UNIQUE KEY `unique_evaluation_criteria` (`evaluation_id`, `criteria_id`)
 );
 
--- Bảng lưu trữ danh mục hồ sơ giám định
+/* Bảng lưu trữ danh mục hồ sơ giám định */
 CREATE TABLE `dossier_document_types` (
     `document_type_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `type_code` VARCHAR(50) NOT NULL UNIQUE,
@@ -242,7 +246,7 @@ CREATE TABLE `dossier_document_types` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Bảng theo dõi hồ sơ có trong dossier
+/* Bảng theo dõi hồ sơ có trong dossier */
 CREATE TABLE `dossier_documents_checklist` (
     `checklist_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `evaluation_id` BIGINT NOT NULL,
@@ -274,12 +278,12 @@ CREATE TABLE `evaluation_signatures` (
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
     UNIQUE KEY `unique_evaluation_signature_type` (`evaluation_id`, `signature_type`)
 );
-
+/*
 -- ========================================
 -- FILE: 03_indexes_and_views.sql
 -- Indexes and Views for performance
 -- ========================================
-
+*/
 -- Thêm indexes cho hiệu suất
 CREATE INDEX `idx_inspection_completion_evaluations_dossier` ON `inspection_completion_evaluations`(`dossier_id`);
 CREATE INDEX `idx_inspection_completion_evaluations_status` ON `inspection_completion_evaluations`(`status`);
@@ -289,68 +293,70 @@ CREATE INDEX `idx_dossier_inspection_team_dossier` ON `dossier_inspection_team`(
 CREATE INDEX `idx_dossier_inspection_team_user` ON `dossier_inspection_team`(`user_id`);
 CREATE INDEX `idx_dossier_documents_checklist_evaluation` ON `dossier_documents_checklist`(`evaluation_id`);
 
+/*
 -- View để xem thông tin đầy đủ của phiếu đánh giá
-CREATE VIEW `v_inspection_evaluations_full` AS
-SELECT 
-    ice.evaluation_id,
-    ice.inspection_number,
-    ice.evaluation_date,
-    ice.status,
-    d.dossier_id,
-    d.registration_no,
-    d.registration_date,
-    c_submit.name AS customer_submit_name,
-    c_related.name AS customer_related_name,
-    it.name AS inspection_type_name,
-    u_evaluator.full_name AS evaluator_name,
-    u_supervisor.full_name AS supervisor_name,
-    ice.created_at,
-    ice.updated_at
-FROM inspection_completion_evaluations ice
-JOIN dossiers d ON ice.dossier_id = d.dossier_id
-JOIN customers c_submit ON d.customer_submit_id = c_submit.customer_id
-LEFT JOIN customers c_related ON d.customer_related_id = c_related.customer_id
-JOIN inspection_types it ON d.inspection_type_id = it.inspection_type_id
-LEFT JOIN users u_evaluator ON ice.evaluator_user_id = u_evaluator.user_id
-LEFT JOIN users u_supervisor ON ice.supervisor_user_id = u_supervisor.user_id;
+-- CREATE VIEW `v_inspection_evaluations_full` AS
+-- SELECT 
+--     ice.evaluation_id,
+--     ice.inspection_number,
+--     ice.evaluation_date,
+--     ice.status,
+--     d.dossier_id,
+--     d.registration_no,
+--     d.registration_date,
+--     c_submit.name AS customer_submit_name,
+--     c_related.name AS customer_related_name,
+--     it.name AS inspection_type_name,
+--     u_evaluator.full_name AS evaluator_name,
+--     u_supervisor.full_name AS supervisor_name,
+--     ice.created_at,
+--     ice.updated_at
+-- FROM inspection_completion_evaluations ice
+-- JOIN dossiers d ON ice.dossier_id = d.dossier_id
+-- JOIN customers c_submit ON d.customer_submit_id = c_submit.customer_id
+-- LEFT JOIN customers c_related ON d.customer_related_id = c_related.customer_id
+-- JOIN inspection_types it ON d.inspection_type_id = it.inspection_type_id
+-- LEFT JOIN users u_evaluator ON ice.evaluator_user_id = u_evaluator.user_id
+-- LEFT JOIN users u_supervisor ON ice.supervisor_user_id = u_supervisor.user_id;
 
--- View để xem kết quả đánh giá chi tiết
-CREATE VIEW `v_evaluation_results_detail` AS
-SELECT 
-    er.result_id,
-    er.evaluation_id,
-    ec.category_name,
-    ecr.criteria_code,
-    ecr.criteria_text,
-    ecr.input_type,
-    er.checkbox_value,
-    er.text_value,
-    er.number_value,
-    er.date_value,
-    er.select_value,
-    er.notes,
-    er.created_at
-FROM evaluation_results er
-JOIN evaluation_criteria ecr ON er.criteria_id = ecr.criteria_id
-JOIN evaluation_categories ec ON ecr.category_id = ec.category_id
-ORDER BY ec.category_order, ecr.criteria_order;
+-- -- View để xem kết quả đánh giá chi tiết
+-- CREATE VIEW `v_evaluation_results_detail` AS
+-- SELECT 
+--     er.result_id,
+--     er.evaluation_id,
+--     ec.category_name,
+--     ecr.criteria_code,
+--     ecr.criteria_text,
+--     ecr.input_type,
+--     er.checkbox_value,
+--     er.text_value,
+--     er.number_value,
+--     er.date_value,
+--     er.select_value,
+--     er.notes,
+--     er.created_at
+-- FROM evaluation_results er
+-- JOIN evaluation_criteria ecr ON er.criteria_id = ecr.criteria_id
+-- JOIN evaluation_categories ec ON ecr.category_id = ec.category_id
+-- ORDER BY ec.category_order, ecr.criteria_order;
 
--- View để xem team inspection cho dossier
-CREATE VIEW `v_dossier_inspection_teams` AS
-SELECT 
-    dit.team_id,
-    dit.dossier_id,
-    d.registration_no,
-    u.full_name,
-    u.email,
-    u.phone,
-    ier.role_name,
-    ier.is_leader,
-    dit.assigned_date,
-    dit.is_active
-FROM dossier_inspection_team dit
-JOIN users u ON dit.user_id = u.user_id
-JOIN inspection_execution_roles ier ON dit.execution_role_id = ier.role_id
-JOIN dossiers d ON dit.dossier_id = d.dossier_id
-WHERE dit.is_active = TRUE
-ORDER BY dit.dossier_id, ier.is_leader DESC, u.full_name;
+-- -- View để xem team inspection cho dossier
+-- CREATE VIEW `v_dossier_inspection_teams` AS
+-- SELECT 
+--     dit.team_id,
+--     dit.dossier_id,
+--     d.registration_no,
+--     u.full_name,
+--     u.email,
+--     u.phone,
+--     ier.role_name,
+--     ier.is_leader,
+--     dit.assigned_date,
+--     dit.is_active
+-- FROM dossier_inspection_team dit
+-- JOIN users u ON dit.user_id = u.user_id
+-- JOIN inspection_execution_roles ier ON dit.execution_role_id = ier.role_id
+-- JOIN dossiers d ON dit.dossier_id = d.dossier_id
+-- WHERE dit.is_active = TRUE
+-- ORDER BY dit.dossier_id, ier.is_leader DESC, u.full_name;
+*/

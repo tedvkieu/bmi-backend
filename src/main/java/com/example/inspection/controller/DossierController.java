@@ -41,6 +41,14 @@ public class DossierController {
         return ResponseEntity.ok(dossierService.getAll(page, size));
     }
 
+    // @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
+    @GetMapping("/search")
+    public ResponseEntity<ReceiptResponse> findByRegistrationNo(@RequestParam String registerNo) {
+        ReceiptResponse dossier = dossierService.findByRegistrationNo(registerNo);
+        System.out.println("chekc dossier: " + dossier);
+        return ResponseEntity.ok(dossier);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/{id}")
     public ResponseEntity<ReceiptResponse> getById(@PathVariable Long id) {

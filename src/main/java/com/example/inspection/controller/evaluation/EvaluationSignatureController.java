@@ -1,4 +1,4 @@
-package com.example.inspection.controller;
+package com.example.inspection.controller.evaluation;
 
 import java.util.List;
 
@@ -15,67 +15,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.inspection.dto.request.CustomerRequest;
-import com.example.inspection.dto.response.CustomerResponse;
-import com.example.inspection.service.CustomerService;
+import com.example.inspection.dto.request.evaluation.EvaluationSignatureRequest;
+import com.example.inspection.dto.response.evaluation.EvaluationSignatureResponse;
+import com.example.inspection.service.evaluation.EvaluationSignatureService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/evaluations/signatures")
 @RequiredArgsConstructor
-public class CustomerController {
+public class EvaluationSignatureController {
 
-    private final CustomerService customerService;
-
-    // Public contact submission (no auth)
-    // @PostMapping("/public")
-    // public ResponseEntity<CustomerResponse> publicContact(@RequestBody
-    // CustomerRequest request) {
-    // return ResponseEntity.ok(customerService.create(request));
-    // }
+    private final EvaluationSignatureService service;
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
-    }
-
-    @PostMapping("/public")
-    public ResponseEntity<CustomerResponse> customerRegister(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
+    public ResponseEntity<EvaluationSignatureResponse> create(@RequestBody EvaluationSignatureRequest request) {
+        return ResponseEntity.ok(service.create(request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getById(id));
+    public ResponseEntity<EvaluationSignatureResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/all")
-    public ResponseEntity<List<CustomerResponse>> getAll() {
-        return ResponseEntity.ok(customerService.getAll());
+    public ResponseEntity<List<EvaluationSignatureResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping
-    public ResponseEntity<Page<CustomerResponse>> getAllForPage(
+    public ResponseEntity<Page<EvaluationSignatureResponse>> getAllForPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(customerService.getAllForPage(page, size));
+        return ResponseEntity.ok(service.getAllForPage(page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.update(id, request));
+    public ResponseEntity<EvaluationSignatureResponse> update(@PathVariable Long id,
+            @RequestBody EvaluationSignatureRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        customerService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
+    @GetMapping("/by-evaluation/{evaluationId}")
+    public ResponseEntity<List<EvaluationSignatureResponse>> getByEvaluation(@PathVariable Long evaluationId) {
+        return ResponseEntity.ok(service.getByEvaluationId(evaluationId));
+    }
 }
+

@@ -15,6 +15,8 @@ public interface DossierService {
 
     ReceiptResponse getDossierById(Long id);
 
+    ReceiptResponse findByRegistrationNo(String registrationNo);
+
     Page<ReceiptResponse> getAll(int page, int size);
 
     List<ReceiptResponse> getAllDossiers();

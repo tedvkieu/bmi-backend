@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<!-- Sửa đường dẫn để không lặp -->
+	<include file="changelogs/001-structure-database.xml" relativeToChangelogFile="true" />
+	<!-- <include file="changelogs/002-seed-data.xml" relativeToChangelogFile="true" /> -->
+	<!-- <include file="changelogs/003-add-scheduled-exam-fields.xml" relativeToChangelogFile="true" /> -->
+	<!-- <include file="changelogs/003-20250620-add-theta-columns.xml" relativeToChangelogFile="true" /> -->
+	<!-- <include file="changelogs/004-20250824-update-assessment-config.xml" relativeToChangelogFile="true"/> -->
+</databaseChangeLog>

@@ -29,6 +29,6 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
                         "WHERE r.dossierId = :dossierId")
         Optional<Dossier> findByIdWithMachines(@Param("dossierId") Long dossierId);
 
-        //
+        Optional<Dossier> findByRegistrationNo(String registrationNo);
 
 }
