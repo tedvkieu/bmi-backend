@@ -8,16 +8,13 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:123456}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:com.mysql.cj.jdbc.Driver}
 
-  sql:
-    init:
-      mode: ${SPRING_SQL_INIT_MODE:never} # always | never | always-if-empty | never-if-empty
-      schema-locations: ${SPRING_SQL_INIT_SCHEMA-LOCATIONS:classpath:schema.sql}
-      data-locations: ${SPRING_SQL_INIT_DATA-LOCATIONS:classpath:data.sql}
-      continue-on-error: ${SPRING_SQL_INIT_CONTINUE-ON-ERROR:false}
+  liquibase:
+    change-log: ${CHANGE_LOG:classpath:db/master-changelog.xml}
+    enabled: true
 
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL-AUTO:validate} # create | create-drop | update | validate | none
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL-AUTO:none} # Liquibase creates schema; validate it
     show-sql: ${SPRING_JPA_SHOW-SQL:false}
     properties:
       hibernate:

@@ -81,6 +81,14 @@ public class DossierServiceImpl implements DossierService {
         }
 
         @Override
+        public ReceiptResponse findByRegistrationNo(String registrationNo) {
+                Dossier dossier = dossierRepository.findByRegistrationNo(registrationNo)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Dossier not found with registrationNo: " + registrationNo));
+                return dossierMapper.toResponse(dossier);
+        }
+
+        @Override
         public ReceiptResponse updateDossier(Long id, ReceiptRequest request) {
                 Dossier dossier = dossierRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));

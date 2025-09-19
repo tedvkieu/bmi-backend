@@ -1,4 +1,4 @@
-package com.example.inspection.controller;
+package com.example.inspection.controller.evaluation;
 
 import java.util.List;
 
@@ -15,67 +15,57 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.inspection.dto.request.CustomerRequest;
-import com.example.inspection.dto.response.CustomerResponse;
-import com.example.inspection.service.CustomerService;
+import com.example.inspection.dto.request.evaluation.DossierDocumentTypeRequest;
+import com.example.inspection.dto.response.evaluation.DossierDocumentTypeResponse;
+import com.example.inspection.service.evaluation.DossierDocumentTypeService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/evaluations/document-types")
 @RequiredArgsConstructor
-public class CustomerController {
+public class DossierDocumentTypeController {
 
-    private final CustomerService customerService;
-
-    // Public contact submission (no auth)
-    // @PostMapping("/public")
-    // public ResponseEntity<CustomerResponse> publicContact(@RequestBody
-    // CustomerRequest request) {
-    // return ResponseEntity.ok(customerService.create(request));
-    // }
+    private final DossierDocumentTypeService service;
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
-    }
-
-    @PostMapping("/public")
-    public ResponseEntity<CustomerResponse> customerRegister(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
+    public ResponseEntity<DossierDocumentTypeResponse> create(@RequestBody DossierDocumentTypeRequest request) {
+        return ResponseEntity.ok(service.create(request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getById(id));
+    public ResponseEntity<DossierDocumentTypeResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/all")
-    public ResponseEntity<List<CustomerResponse>> getAll() {
-        return ResponseEntity.ok(customerService.getAll());
+    public ResponseEntity<List<DossierDocumentTypeResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping
-    public ResponseEntity<Page<CustomerResponse>> getAllForPage(
+    public ResponseEntity<Page<DossierDocumentTypeResponse>> getAllForPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(customerService.getAllForPage(page, size));
+        return ResponseEntity.ok(service.getAllForPage(page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.update(id, request));
+    public ResponseEntity<DossierDocumentTypeResponse> update(@PathVariable Long id,
+            @RequestBody DossierDocumentTypeRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        customerService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
+

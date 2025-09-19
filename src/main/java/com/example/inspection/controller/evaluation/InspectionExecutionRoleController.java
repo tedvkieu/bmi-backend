@@ -1,4 +1,4 @@
-package com.example.inspection.controller;
+package com.example.inspection.controller.evaluation;
 
 import java.util.List;
 
@@ -15,67 +15,57 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.inspection.dto.request.CustomerRequest;
-import com.example.inspection.dto.response.CustomerResponse;
-import com.example.inspection.service.CustomerService;
+import com.example.inspection.dto.request.evaluation.InspectionExecutionRoleRequest;
+import com.example.inspection.dto.response.evaluation.InspectionExecutionRoleResponse;
+import com.example.inspection.service.evaluation.InspectionExecutionRoleService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/evaluations/roles")
 @RequiredArgsConstructor
-public class CustomerController {
+public class InspectionExecutionRoleController {
 
-    private final CustomerService customerService;
-
-    // Public contact submission (no auth)
-    // @PostMapping("/public")
-    // public ResponseEntity<CustomerResponse> publicContact(@RequestBody
-    // CustomerRequest request) {
-    // return ResponseEntity.ok(customerService.create(request));
-    // }
+    private final InspectionExecutionRoleService service;
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
-    }
-
-    @PostMapping("/public")
-    public ResponseEntity<CustomerResponse> customerRegister(@RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.create(request));
+    public ResponseEntity<InspectionExecutionRoleResponse> create(@RequestBody InspectionExecutionRoleRequest request) {
+        return ResponseEntity.ok(service.create(request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getById(id));
+    public ResponseEntity<InspectionExecutionRoleResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping("/all")
-    public ResponseEntity<List<CustomerResponse>> getAll() {
-        return ResponseEntity.ok(customerService.getAll());
+    public ResponseEntity<List<InspectionExecutionRoleResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF','DOCUMENT_STAFF','INSPECTOR')")
     @GetMapping
-    public ResponseEntity<Page<CustomerResponse>> getAllForPage(
+    public ResponseEntity<Page<InspectionExecutionRoleResponse>> getAllForPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(customerService.getAllForPage(page, size));
+        return ResponseEntity.ok(service.getAllForPage(page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ISO_STAFF')")
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.update(id, request));
+    public ResponseEntity<InspectionExecutionRoleResponse> update(@PathVariable Long id,
+            @RequestBody InspectionExecutionRoleRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        customerService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
+

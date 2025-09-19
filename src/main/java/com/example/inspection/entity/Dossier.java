@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.context.annotation.DependsOn;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,7 +37,6 @@ import lombok.ToString;
         "machines",
         "inspectionResults"
 })
-@DependsOn({ "Customer", "InspectionType" })
 public class Dossier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
